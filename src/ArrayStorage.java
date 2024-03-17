@@ -5,39 +5,35 @@ import java.util.Objects;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    private int size = 0;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++) {
-            if (Objects.nonNull(storage[i])) {
-                storage[i] = null;
-            }
+        for (int i = 0; i <= size; i++) {
+            storage[i] = null;
+            size = 0;
         }
     }
 
     void save(Resume r) {
-        for (int i = 0; i <= storage.length - 1; i++) {
-            if (Objects.isNull(storage[i])) {
-                storage[i] = r;
-                break;
-            }
-        }
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
-        for (Resume e : storage) {
-            if (Objects.nonNull(e) && e.uuid.equals(uuid)) {
-                return e;
+        for (int i = 0; i < size; i++) {
+            Resume tempResume = storage[i];
+            if (tempResume.uuid.equals(uuid)) {
+                return tempResume;
             }
         }
         return null;
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < storage.length; i++) {
-            if (Objects.nonNull(storage[i]) && storage[i].uuid.equals(uuid)) {
-                for (int j = i; j < storage.length - 1; j++) {
-                    storage[j] = storage[j + 1];
-                }
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                storage[i] = storage[--size];
+                break;
             }
         }
     }
@@ -46,26 +42,13 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int capacityCount = 0;
-        for (Resume resume : storage) {
-            if (Objects.nonNull(resume)) {
-                capacityCount++;
-            }
-        }
-        Resume[] resultResumeArray = new Resume[capacityCount];
-        System.arraycopy(storage, 0, resultResumeArray, 0, capacityCount);
+        Resume[] resultResumeArray = new Resume[size];
+        System.arraycopy(storage, 0, resultResumeArray, 0, size);
 
         return resultResumeArray;
     }
 
     int size() {
-        int size = 0;
-        for (Resume resume : storage) {
-            if (Objects.nonNull(resume)) {
-                size++;
-            }
-        }
-
         return size;
     }
 }
